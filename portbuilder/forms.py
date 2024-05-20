@@ -1,5 +1,5 @@
 from django import forms
-from .models import ContactInfo, SocialLink
+from .models import ContactInfo, SocialLink, Bio, CV
 
 
 class ContactInfoForm(forms.ModelForm):
@@ -42,3 +42,33 @@ class Socials_Create(forms.Form):
         )
 
         return contact_info, social_link
+
+
+class UpdateForm(forms.ModelForm):
+    linkedin = forms.URLField(required=False)
+    github = forms.URLField(required=False)
+    twitter = forms.URLField(required=False)
+
+    class Meta:
+        model = Bio
+        fields = ["first_name", "last_name", "about_me", "profile_picture"]
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+        if self.user:
+            social_link, created = SocialLink.objects.get_or_create(user=self.user)
+            self.fields["linkedin"].initial = social_link.linkedin
+            self.fields["github"].initial = social_link.github
+            self.fields["twitter"].initial = social_link.twitter
+
+    def save(self, commit=True):
+        bio = super().save(commit=False)
+        if commit:
+            bio.save()
+        social_link, created = SocialLink.objects.get_or_create(user=self.user)
+        social_link.linkedin = self.cleaned_data["linkedin"]
+        social_link.github = self.cleaned_data["github"]
+        social_link.twitter = self.cleaned_data["twitter"]
+        social_link.save()
+        return bio

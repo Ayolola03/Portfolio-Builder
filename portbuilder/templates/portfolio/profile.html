@@ -1,63 +1,53 @@
-<!DOCTYPE html>
-<html>
+{% extends "base_build.html" %}
 
-<head>
-    <title>{{ user_profile.username }}'s Profile</title>
-</head>
+{% block content %}
+<div class="row">
+    <div class="col">
 
-<body>
-    <h1>{{ user_profile.username }}'s Profile</h1>
+        {% if bio.profile_picture %}
+        <img src="{{ bio.profile_picture.url }}" style="height: auto; border-radius: 200px;" width="260" height="260" alt="{{ bio.first_name }}">
+        {% else %}
+        <p>No profile picture available.</p>
+        {% endif %}
 
-    {% if bio %}
-    <h2>Bio</h2>
-    <p>{{ bio.first_name }} {{ bio.last_name }}</p>
-    <p>{{ bio.about_me }}</p>
-    {% if bio.profile_picture %}
-    <img src="{{ bio.profile_picture.url }}" alt="Profile Picture">
-    {% endif %}
-    {% else %}
-    <p>No bio available.</p>
-    {% endif %}
+        <p>First Name: {{ bio.first_name }}</p>
+        <p>Last Name: {{ bio.last_name }}</p>
+        <p>About Me: {{ bio.about_me }}</p>
+        
+    
+        {% if social_links %}
+        <h2>Social Links</h2>
+        <p>LinkedIn: <a href="{{ social_links.linkedin }}">{{ social_links.linkedin }}</a></p>
+        <p>GitHub: <a href="{{ social_links.github }}">{{ social_links.github }}</a></p>
+        <p>Twitter: <a href="{{ social_links.twitter }}">{{ social_links.twitter }}</a></p>
+        {% else %}
+        <p>No social links available.</p>
+        {% endif %}
 
-    {% if contact_info %}
-    <h2>Contact Information</h2>
-    <p>Email: {{ contact_info.email }}</p>
-    <p>Phone: {{ contact_info.phone_number }}</p>
-    <p>Address: {{ contact_info.address }}</p>
-    {% else %}
-    <p>No contact information available.</p>
-    {% endif %}
+        <a href="{% url 'profile_update' bio.pk %}">Edit Profile</a>
+    </div>
+    <div class="col">
+        {% if cv and cv.file %}
+        <h2>CV</h2>
+        <a href="{{ cv.file.url }}">View CV</a>
+        <a href="{% url 'cvupload' %}">Reupload</a>
+        {% else %}
+        <p>No CV available.</p>
+        <a href="{% url 'cvupload' %}">Upload CV</a>
+        {% endif %}
 
-    {% if social_links %}
-    <h2>Social Links</h2>
-    <p>LinkedIn: <a href="{{ social_links.linkedin }}">{{ social_links.linkedin }}</a></p>
-    <p>GitHub: <a href="{{ social_links.github }}">{{ social_links.github }}</a></p>
-    <p>Twitter: <a href="{{ social_links.twitter }}">{{ social_links.twitter }}</a></p>
-    {% else %}
-    <p>No social links available.</p>
-    {% endif %}
-
-    {% if cv %}
-    <h2>CV</h2>
-    <a href="{{ cv.file.url }}">Download CV</a>
-    {% else %}
-    <p>No CV available.</p>
-    {% endif %}
-
-    <h2>Projects</h2>
-    {% if projects %}
-    <ul>
-        {% for project in projects %}
-        <li>
-            <h3>{{ project.name }}</h3>
-            <p>{{ project.description }}</p>
-            <p><a href="{{ project.link }}">{{ project.link }}</a></p>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No projects available.</p>
-    {% endif %}
-</body>
-
-</html>
+        <h2>Projects</h2>
+        {% if projects %}
+        <ul>
+            {% for project in projects %}
+            <li>{{ project.name }}: {{ project.description }}</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'projectupload' %}">Upload a project</a>
+        {% else %}
+        <p>No projects available.</p>
+        <a href="{% url 'projectupload' %}">Upload a project</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
