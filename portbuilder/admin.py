@@ -46,11 +46,11 @@ class ContactInfoAdmin(admin.ModelAdmin):
 
 @admin.register(SocialLink)
 class SocialLinkAdmin(admin.ModelAdmin):
-    list_display = ("user", "linkedin", "github", "twitter", "created_at", "updated_at")
-    search_fields = ("user__username", "linkedin", "github", "twitter")
+    list_display = ("user", "url1", "url2", "url3", "created_at", "updated_at")
+    search_fields = ("user__username", "url1", "url2", "url3")
     list_filter = ("created_at", "updated_at")
     fieldsets = (
-        (None, {"fields": ("user", "linkedin", "github", "twitter")}),
+        (None, {"fields": ("user", "url1", "url2", "url3")}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),
     )
     readonly_fields = ("created_at", "updated_at")

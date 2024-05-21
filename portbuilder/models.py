@@ -33,9 +33,9 @@ class ContactInfo(models.Model):
 
 class SocialLink(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    linkedin = models.URLField(blank=True, null=True)
-    github = models.URLField(blank=True, null=True)
-    twitter = models.URLField(blank=True, null=True)
+    url1 = models.URLField(blank=True, null=True)
+    url2 = models.URLField(blank=True, null=True)
+    url3 = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

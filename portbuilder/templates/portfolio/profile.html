@@ -2,29 +2,66 @@
 
 {% block content %}
 <div class="row">
-    <div class="col">
-
+    <div class="col-md-auto">
+        
         {% if bio.profile_picture %}
         <img src="{{ bio.profile_picture.url }}" style="height: auto; border-radius: 200px;" width="260" height="260" alt="{{ bio.first_name }}">
         {% else %}
         <p>No profile picture available.</p>
         {% endif %}
 
-        <p>First Name: {{ bio.first_name }}</p>
-        <p>Last Name: {{ bio.last_name }}</p>
-        <p>About Me: {{ bio.about_me }}</p>
+        <div>{{ bio.last_name }} {{ bio.first_name }}</div>
+        <div>About Me: {{ bio.about_me }}</div>
+        <a href="{% url 'profile_update' bio.pk %}">Edit Profile</a>
         
+        {% if contact_info %}
+
+        <p><i class="fa-solid fa-map-marker-alt"></i> {{ contact_info.email }}</p>
+
+        {% endif %}
     
-        {% if social_links %}
-        <h2>Social Links</h2>
-        <p>LinkedIn: <a href="{{ social_links.linkedin }}">{{ social_links.linkedin }}</a></p>
-        <p>GitHub: <a href="{{ social_links.github }}">{{ social_links.github }}</a></p>
-        <p>Twitter: <a href="{{ social_links.twitter }}">{{ social_links.twitter }}</a></p>
+        
+
+
+        {% if social_links.url1 == ''   %}
+        <p></p>
         {% else %}
-        <p>No social links available.</p>
+            {% if 'linkedin' in social_links.url1 %}
+        <hr>
+        <p><i class="fa fa-linkedin-square"></i>  <a href="{{ social_links.url1 }}">{{ social_links.url1 }}</a></p>
+            {% elif 'instagram in social_links.url1' %}
+        <p><i class="fa fa-instagram"></i> <a href="{{ social_links.url1 }}">{{ social_links.url1 }}</a></p>
+            {% elif 'facebook' in social_links.url1 %}
+        <p><i class="fa fa-facebook-square"></i> <a href="{{ social_links.url1 }}">{{ social_links.url1 }}</a></p>
+            {% endif %}
         {% endif %}
 
-        <a href="{% url 'profile_update' bio.pk %}">Edit Profile</a>
+        {% if social_links.url2 == '' %}
+        <p></p>
+        {% else %}
+            {% if 'linkedin' in social_links.url2 %}
+        <hr>
+        <p>Linkedin: <a href="{{ social_links.url2 }}">{{ social_links.url2 }}</a></p>
+            {% elif 'instagram in social_links.url2' %}
+        <p>Instagram: <a href="{{ social_links.url2 }}">{{ social_links.url2 }}</a></p>
+            {% elif 'facebook' in social_links.url2 %}
+        <p>Facebook: <a href="{{ social_links.url2 }}">{{ social_links.url2 }}</a></p>
+            {% endif %}
+        {% endif %}
+
+        {% if social_links.url3 == '' %}
+        <p></p>
+        {% else %}
+            {% if 'linkedin' in social_links.url3 %}
+        <hr>
+        <p>Linkedin: <a href="{{ social_links.url3 }}">{{ social_links.url3 }}</a></p>
+            {% elif 'instagram in social_links.url3' %}
+        <p>Instagram: <a href="{{ social_links.url3 }}">{{ social_links.url3 }}</a></p>
+            {% elif 'facebook' in social_links.url3 %}
+        <p>Facebook: <a href="{{ social_links.url3 }}">{{ social_links.url3 }}</a></p>
+            {% endif %}
+        {% endif %}
+        
     </div>
     <div class="col">
         {% if cv and cv.file %}

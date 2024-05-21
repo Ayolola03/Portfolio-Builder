@@ -11,16 +11,16 @@ class ContactInfoForm(forms.ModelForm):
 class SocialLinkForm(forms.ModelForm):
     class Meta:
         model = SocialLink
-        fields = ["linkedin", "github", "twitter"]
+        fields = ["url1", "url2", "url3"]
 
 
 class Socials_Create(forms.Form):
     email = forms.EmailField()
     phone_number = forms.CharField(max_length=15, required=False)
     address = forms.CharField(max_length=255, required=False)
-    linkedin = forms.URLField(required=False)
-    github = forms.URLField(required=False)
-    twitter = forms.URLField(required=False)
+    url1 = forms.URLField(required=False)
+    url2 = forms.URLField(required=False)
+    url3 = forms.URLField(required=False)
 
     def save(self, user):
         contact_info, created = ContactInfo.objects.update_or_create(
@@ -35,9 +35,9 @@ class Socials_Create(forms.Form):
         social_link, created = SocialLink.objects.update_or_create(
             user=user,
             defaults={
-                "linkedin": self.cleaned_data["linkedin"],
-                "github": self.cleaned_data["github"],
-                "twitter": self.cleaned_data["twitter"],
+                "url1": self.cleaned_data["url1"],
+                "url2": self.cleaned_data["url2"],
+                "url3": self.cleaned_data["url3"],
             },
         )
 
@@ -45,9 +45,9 @@ class Socials_Create(forms.Form):
 
 
 class UpdateForm(forms.ModelForm):
-    linkedin = forms.URLField(required=False)
-    github = forms.URLField(required=False)
-    twitter = forms.URLField(required=False)
+    url1 = forms.URLField(required=False)
+    url2 = forms.URLField(required=False)
+    url3 = forms.URLField(required=False)
 
     class Meta:
         model = Bio
@@ -58,17 +58,17 @@ class UpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.user:
             social_link, created = SocialLink.objects.get_or_create(user=self.user)
-            self.fields["linkedin"].initial = social_link.linkedin
-            self.fields["github"].initial = social_link.github
-            self.fields["twitter"].initial = social_link.twitter
+            self.fields["url1"].initial = social_link.url1
+            self.fields["url2"].initial = social_link.url2
+            self.fields["url3"].initial = social_link.url3
 
     def save(self, commit=True):
         bio = super().save(commit=False)
         if commit:
             bio.save()
         social_link, created = SocialLink.objects.get_or_create(user=self.user)
-        social_link.linkedin = self.cleaned_data["linkedin"]
-        social_link.github = self.cleaned_data["github"]
-        social_link.twitter = self.cleaned_data["twitter"]
+        social_link.url1 = self.cleaned_data["url1"]
+        social_link.url2 = self.cleaned_data["url2"]
+        social_link.url3 = self.cleaned_data["url3"]
         social_link.save()
         return bio

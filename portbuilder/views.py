@@ -1,24 +1,23 @@
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from .models import Bio, ContactInfo, CV, SocialLink, Project
-from django import forms
 from django.urls import reverse
 from django.urls import reverse_lazy
-from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from .forms import Socials_Create, UpdateForm
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 
 User = get_user_model()
+
 
 class StartPageView(ListView):
     template_name = "portfolio/index.html"
     model = Bio
 
+
 class Bio_Create(CreateView):
     template_name = "portfolio/bio_create.html"
     model = Bio
-    fields = ['first_name', 'last_name', 'about_me', 'profile_picture']
+    fields = ["first_name", "last_name", "about_me", "profile_picture"]
     success_url = reverse_lazy(
         "create_socials"
     )  # Redirect to profile page or any appropriate URL
@@ -26,6 +25,7 @@ class Bio_Create(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
 
 class Socials_Create(CreateView):
     template_name = "portfolio/socials_create.html"
@@ -108,10 +108,11 @@ class CvUpload(UpdateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+
 class ProjectUpload(CreateView):
     model = Project
     template_name = "portfolio/projectupload.html"
-    fields = ['name', 'description', 'link']
+    fields = ["name", "description", "link"]
 
     def form_valid(self, form):
         form.instance.user = self.request.user
