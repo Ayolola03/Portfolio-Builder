@@ -32,15 +32,23 @@ class ContactInfo(models.Model):
 
 
 class SocialLink(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    url1 = models.URLField(blank=True, null=True)
-    url2 = models.URLField(blank=True, null=True)
-    url3 = models.URLField(blank=True, null=True)
+    PLATFORM_CHOICES = [
+        ("linkedin", "LinkedIn"),
+        ("github", "GitHub"),
+        ("twitter", "Twitter"),
+        ("instagram", "Instagram"),
+        ("facebook", "Facebook"),
+        ("other", "Other"),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    platform = models.CharField(max_length=20, choices=PLATFORM_CHOICES)
+    url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username} - {self.get_platform_display()}"
 
 
 class CV(models.Model):
@@ -60,6 +68,33 @@ class Project(models.Model):
     link = models.URLField(blank=True, help_text="Link to the project")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Stack(models.Model):
+    MASTERY_CHOICES = [
+        ("beginner", "Beginner"),
+        ("intermediate", "Intermediate"),
+        ("advanced", "Advanced"),
+        ("expert", "Expert"),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    mastery_level = models.CharField(max_length=20, choices=MASTERY_CHOICES)
+    experience_years = models.IntegerField(help_text="Years of experience")
+
+    def __str__(self):
+        return f"{self.name} ({self.mastery_level})"
+
+
+class Services(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, help_text="Description of the service")
+    
 
     def __str__(self):
         return self.name

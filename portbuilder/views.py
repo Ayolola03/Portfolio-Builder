@@ -1,10 +1,9 @@
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
-from .models import Bio, ContactInfo, CV, SocialLink, Project
-from django.urls import reverse
-from django.urls import reverse_lazy
-from django.views.generic.edit import FormView
-from .forms import Socials_Create, UpdateForm
+from .models import Bio, ContactInfo, CV, SocialLink, Project, Stack, Services
+from django.urls import reverse, reverse_lazy
+from .forms import Socials_Create, UpdateForm, StackForm, ServiceForm
 from django.contrib.auth import get_user_model
+from django.views.generic.edit import FormView
 
 User = get_user_model()
 
@@ -39,6 +38,32 @@ class Socials_Create(CreateView):
         return super().form_valid(form)
 
 
+class StackCreateView(FormView):
+    template_name = "portfolio/stack.html"
+    form_class = StackForm
+    # Redirect to the profile page after successful form submission
+
+    def get_success_url(self):
+        return reverse("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        form.save(self.request.user)
+        return super().form_valid(form)
+
+
+class ServiceCreateView(FormView):
+    template_name = "portfolio/service.html"
+    form_class = ServiceForm
+    # Redirect to the profile page after successful form submission
+
+    def get_success_url(self):
+        return reverse("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        form.save(self.request.user)
+        return super().form_valid(form)
+
+
 class ProfileView(DetailView):
     model = User
     template_name = "portfolio/profile.html"
@@ -56,20 +81,18 @@ class ProfileView(DetailView):
         except ContactInfo.DoesNotExist:
             context["contact_info"] = None
 
-        try:
-            context["social_links"] = SocialLink.objects.get(user=user)
-        except SocialLink.DoesNotExist:
-            context["social_links"] = None
+        context["social_links"] = SocialLink.objects.filter(user=user)
 
         try:
             context["cv"] = CV.objects.get(user=user)
         except CV.DoesNotExist:
             context["cv"] = None
 
-        try:
-            context["projects"] = Project.objects.filter(user=user)
-        except Project.DoesNotExist:
-            context["projects"] = None
+        context["stacks"] = Stack.objects.filter(user=user)
+        context["services"] = Services.objects.filter(user=user)
+
+        context["projects"] = Project.objects.filter(user=user)
+
         return context
 
 
@@ -94,10 +117,9 @@ class UpdateProfile(UpdateView):
 class CvUpload(UpdateView):
     model = CV
     template_name = "portfolio/cvupload.html"
-    fields = ["file"]  # Assuming you only want to upload the CV file
+    fields = ["file"]
 
     def get_object(self, queryset=None):
-        # Get the CV object for the current user, or create a new one if it doesn't exist
         obj, created = CV.objects.get_or_create(user=self.request.user)
         return obj
 
@@ -114,9 +136,46 @@ class ProjectUpload(CreateView):
     template_name = "portfolio/projectupload.html"
     fields = ["name", "description", "link"]
 
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+
+class ProjectEdit(UpdateView):
+    model = Project
+    template_name = "portfolio/projectedit.html"
+    fields = ["name", "description", "link"]
+
+    def get_object(self, queryset=None):
+        # Ensure that we get the project for the current user
+        return Project.objects.get(pk=self.kwargs["pk"], user=self.request.user)
+
     def get_success_url(self):
         return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class PortfolioView(DetailView):
+    model = User
+    template_name = "portview/index.html"
+    context_object_name = "user_index"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.get_object()
+
+        # Retrieve related models
+        context["bio"] = Bio.objects.get(user=user)
+
+        try:
+            context["cv"] = CV.objects.get(user=user)
+        except CV.DoesNotExist:
+            context["cv"] = None
+
+        return context

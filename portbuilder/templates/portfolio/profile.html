@@ -3,9 +3,9 @@
 {% block content %}
 <div class="row">
     <div class="col-md-auto">
-        
         {% if bio.profile_picture %}
-        <img src="{{ bio.profile_picture.url }}" style="height: auto; border-radius: 200px;" width="260" height="260" alt="{{ bio.first_name }}">
+        <img src="{{ bio.profile_picture.url }}" style="height: auto; border-radius: 200px;" width="260" height="260"
+            alt="{{ bio.first_name }}">
         {% else %}
         <p>No profile picture available.</p>
         {% endif %}
@@ -13,57 +13,30 @@
         <div>{{ bio.last_name }} {{ bio.first_name }}</div>
         <div>About Me: {{ bio.about_me }}</div>
         <a href="{% url 'profile_update' bio.pk %}">Edit Profile</a>
-        
+
         {% if contact_info %}
-
         <p><i class="fa-solid fa-map-marker-alt"></i> {{ contact_info.email }}</p>
-
         {% endif %}
-    
-        
 
-
-        {% if social_links.url1 == ''   %}
-        <p></p>
-        {% else %}
-            {% if 'linkedin' in social_links.url1 %}
+        {% if social_links %}
         <hr>
-        <p><i class="fa fa-linkedin-square"></i>  <a href="{{ social_links.url1 }}">{{ social_links.url1 }}</a></p>
-            {% elif 'instagram in social_links.url1' %}
-        <p><i class="fa fa-instagram"></i> <a href="{{ social_links.url1 }}">{{ social_links.url1 }}</a></p>
-            {% elif 'facebook' in social_links.url1 %}
-        <p><i class="fa fa-facebook-square"></i> <a href="{{ social_links.url1 }}">{{ social_links.url1 }}</a></p>
-            {% endif %}
+        {% for link in social_links %}
+        {% if link.platform == "linkedin" %}
+        <p><i class="fa fa-linkedin-square"></i> <a href="{{ link.url }}">{{ link.url }}</a></p>
+        {% elif link.platform == "instagram" %}
+        <p><i class="fa fa-instagram"></i> <a href="{{ link.url }}">{{ link.url }}</a></p>
+        {% elif link.platform == "facebook" %}
+        <p><i class="fa fa-facebook-square"></i> <a href="{{ link.url }}">{{ link.url }}</a></p>
+        {% elif link.platform == "github" %}
+        <p><i class="fa fa-github"></i> <a href="{{ link.url }}">{{ link.url }}</a></p>
+        {% elif link.platform == "twitter" %}
+        <p><i class="fa fa-twitter"></i> <a href="{{ link.url }}">{{ link.url }}</a></p>
         {% endif %}
-
-        {% if social_links.url2 == '' %}
-        <p></p>
-        {% else %}
-            {% if 'linkedin' in social_links.url2 %}
-        <hr>
-        <p>Linkedin: <a href="{{ social_links.url2 }}">{{ social_links.url2 }}</a></p>
-            {% elif 'instagram in social_links.url2' %}
-        <p>Instagram: <a href="{{ social_links.url2 }}">{{ social_links.url2 }}</a></p>
-            {% elif 'facebook' in social_links.url2 %}
-        <p>Facebook: <a href="{{ social_links.url2 }}">{{ social_links.url2 }}</a></p>
-            {% endif %}
+        {% endfor %}
         {% endif %}
-
-        {% if social_links.url3 == '' %}
-        <p></p>
-        {% else %}
-            {% if 'linkedin' in social_links.url3 %}
-        <hr>
-        <p>Linkedin: <a href="{{ social_links.url3 }}">{{ social_links.url3 }}</a></p>
-            {% elif 'instagram in social_links.url3' %}
-        <p>Instagram: <a href="{{ social_links.url3 }}">{{ social_links.url3 }}</a></p>
-            {% elif 'facebook' in social_links.url3 %}
-        <p>Facebook: <a href="{{ social_links.url3 }}">{{ social_links.url3 }}</a></p>
-            {% endif %}
-        {% endif %}
-        
     </div>
-    <div class="col">
+
+    <div class="col-6" style="flex-shrink: 0;">
         {% if cv and cv.file %}
         <h2>CV</h2>
         <a href="{{ cv.file.url }}">View CV</a>
@@ -75,15 +48,88 @@
 
         <h2>Projects</h2>
         {% if projects %}
-        <ul>
+        <div class="row g-2">
             {% for project in projects %}
-            <li>{{ project.name }}: {{ project.description }}</li>
+            <div class="col pt-2">
+                <div class="card" style="width: 18rem;">
+                    <svg class="bd-placeholder-img card-img-top text-center" width="100%" height="180"
+                        xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap"
+                        preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <rect width="100%" height="100%" fill="#868e96"></rect>
+                        <text x="35%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.name }}</h5>
+                        <p class="card-text">{{ project.description }}</p>
+                    </div>
+                    <div class="card-body  justify-content-between d-flex align-items-center">
+                        <a href="#" class="card-link btn btn-primary">View</a>
+                        <a href="{% url 'projectedit' project.pk %}" class="card-link btn btn-primary justify-content-end">Edit</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="col pt-2">
+                <div class="card" style="width: 18rem;">
+                    <svg class="bd-placeholder-img card-img-top text-center" width="100%" height="180"
+                        xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap"
+                        preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <rect width="100%" height="100%" fill="#868e96"></rect>
+                        <text x="35%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+                    </svg>
+                    <div class="card-body">
+                        <h5 class="card-title">....</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'projectupload' %}" class="card-link btn btn-primary">Upload a Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col pt-2">
+            <div class="card" style="width: 18rem;">
+                <svg class="bd-placeholder-img card-img-top text-center" width="100%" height="180"
+                    xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap"
+                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <rect width="100%" height="100%" fill="#868e96"></rect>
+                    <text x="35%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+                </svg>
+                <div class="card-body">
+                    <h5 class="card-title">....</h5>
+                    <p class="card-text">No projects available...</p>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'projectupload' %}" class="card-link">Upload a Project</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col">
+        <h2>Your Stacks</h2>
+        {% if stacks %}
+        <ul>
+            {% for stack in stacks %}
+            <li>{{ stack.name }}: {{ stack.mastery_level }}</li>
             {% endfor %}
         </ul>
-        <a href="{% url 'projectupload' %}">Upload a project</a>
         {% else %}
-        <p>No projects available.</p>
-        <a href="{% url 'projectupload' %}">Upload a project</a>
+        <p>No Stacks yet.</p>
+        <a href="{% url 'stacks' %}">Add Em</a>
+        {% endif %}
+
+        <h2>Your Services</h2>
+        {% if services %}
+        <ul>
+            {% for service in services %}
+            <li>{{ service.name }}: {{ service.description }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No Services yet.</p>
+        <a href="{% url 'services' %}">Add Services</a>
         {% endif %}
     </div>
 </div>

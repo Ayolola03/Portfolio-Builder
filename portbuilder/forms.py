@@ -1,5 +1,5 @@
 from django import forms
-from .models import ContactInfo, SocialLink, Bio, CV
+from .models import ContactInfo, SocialLink, Bio, CV, Services, Stack
 
 
 class ContactInfoForm(forms.ModelForm):
@@ -11,15 +11,18 @@ class ContactInfoForm(forms.ModelForm):
 class SocialLinkForm(forms.ModelForm):
     class Meta:
         model = SocialLink
-        fields = ["url1", "url2", "url3"]
+        fields = ["platform", "url"]
 
 
 class Socials_Create(forms.Form):
     email = forms.EmailField()
     phone_number = forms.CharField(max_length=15, required=False)
     address = forms.CharField(max_length=255, required=False)
+    platform1 = forms.ChoiceField(choices=SocialLink.PLATFORM_CHOICES, required=False)
     url1 = forms.URLField(required=False)
+    platform2 = forms.ChoiceField(choices=SocialLink.PLATFORM_CHOICES, required=False)
     url2 = forms.URLField(required=False)
+    platform3 = forms.ChoiceField(choices=SocialLink.PLATFORM_CHOICES, required=False)
     url3 = forms.URLField(required=False)
 
     def save(self, user):
@@ -32,21 +35,25 @@ class Socials_Create(forms.Form):
             },
         )
 
-        social_link, created = SocialLink.objects.update_or_create(
-            user=user,
-            defaults={
-                "url1": self.cleaned_data["url1"],
-                "url2": self.cleaned_data["url2"],
-                "url3": self.cleaned_data["url3"],
-            },
-        )
+        # Delete old links
+        SocialLink.objects.filter(user=user).delete()
 
-        return contact_info, social_link
+        # Create new links
+        for i in range(1, 4):
+            platform = self.cleaned_data.get(f"platform{i}")
+            url = self.cleaned_data.get(f"url{i}")
+            if platform and url:
+                SocialLink.objects.create(user=user, platform=platform, url=url)
+
+        return contact_info, SocialLink.objects.filter(user=user)
 
 
 class UpdateForm(forms.ModelForm):
+    platform1 = forms.ChoiceField(choices=SocialLink.PLATFORM_CHOICES, required=False)
     url1 = forms.URLField(required=False)
+    platform2 = forms.ChoiceField(choices=SocialLink.PLATFORM_CHOICES, required=False)
     url2 = forms.URLField(required=False)
+    platform3 = forms.ChoiceField(choices=SocialLink.PLATFORM_CHOICES, required=False)
     url3 = forms.URLField(required=False)
 
     class Meta:
@@ -57,18 +64,64 @@ class UpdateForm(forms.ModelForm):
         self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
         if self.user:
-            social_link, created = SocialLink.objects.get_or_create(user=self.user)
-            self.fields["url1"].initial = social_link.url1
-            self.fields["url2"].initial = social_link.url2
-            self.fields["url3"].initial = social_link.url3
+            social_links = SocialLink.objects.filter(user=self.user)
+            for i, social_link in enumerate(social_links, start=1):
+                self.fields[f"platform{i}"].initial = social_link.platform
+                self.fields[f"url{i}"].initial = social_link.url
 
     def save(self, commit=True):
         bio = super().save(commit=False)
         if commit:
             bio.save()
-        social_link, created = SocialLink.objects.get_or_create(user=self.user)
-        social_link.url1 = self.cleaned_data["url1"]
-        social_link.url2 = self.cleaned_data["url2"]
-        social_link.url3 = self.cleaned_data["url3"]
-        social_link.save()
+        SocialLink.objects.filter(user=self.user).delete()
+        for i in range(1, 4):
+            platform = self.cleaned_data.get(f"platform{i}")
+            url = self.cleaned_data.get(f"url{i}")
+            if platform and url:
+                SocialLink.objects.create(user=self.user, platform=platform, url=url)
         return bio
+
+
+class StackForm(forms.Form):
+    # Fields for Stack
+    stack_name = forms.CharField(max_length=100, label="Stack Name")
+    mastery_level = forms.ChoiceField(
+        choices=Stack.MASTERY_CHOICES, label="Mastery Level"
+    )
+    experience_years = forms.IntegerField(label="Years of Experience")
+
+    
+    
+
+    def save(self, user):
+        # Save Stack data
+        stack, created = Stack.objects.update_or_create(
+            user=user,
+            name=self.cleaned_data["stack_name"],
+            defaults={
+                "mastery_level": self.cleaned_data["mastery_level"],
+                "experience_years": self.cleaned_data["experience_years"],
+            },
+        )
+
+        
+        return stack
+
+class ServiceForm(forms.Form):
+    # Fields for Service
+    service_name = forms.CharField(max_length=100, label="Service Name")
+    service_description = forms.CharField(
+        widget=forms.Textarea, label="Service Description", required=False
+    )
+
+    def save(self, user):
+        # Save Service data
+        service, created = Services.objects.update_or_create(
+            user=user,
+            name=self.cleaned_data["service_name"],
+            defaults={
+                "description": self.cleaned_data["service_description"],
+            },
+        )
+
+        return service
