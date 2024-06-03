@@ -1,17 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Started</title>
-</head>
-<body>
-    <h1>Let's know more about you...</h1>
-    <form action="" method="post">
+{% extends "portfolio/base_create.html" %}
+{% block content %}
+
+<div class="container mt-5" style="max-width: 600px;">
+    <h1 class="text-start mb-4 form-title">Let's know more about you...</h1>
+    <form action="" method="post" enctype="multipart/form-data" novalidate class="row g-3">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div class="col-md-6">
+            <label for="first_name">First Name</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" data-toggle="tooltip" data-placement="top" title="Enter your first name">
+                        <i class="fas fa-user"></i>
+                    </span>
+                </div>
+                <input type="text" name="first_name" class="form-control form-control-lg" placeholder="First Name"
+                    required>
+                <div class="invalid-feedback">
+                    Please enter your first name.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label for="last_name">Last Name</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" data-toggle="tooltip" data-placement="top"
+                        title="Enter your last name">
+                        <i class="fas fa-user"></i>
+                    </span>
+                </div>
+                <input type="text" name="last_name" class="form-control form-control-lg" placeholder="Last Name"
+                    required>
+                <div class="invalid-feedback">
+                    Please enter your last name.
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="about_me">About Me</label>
+            <textarea class="form-control" id="about_me" name="about_me" placeholder="Tell us something about yourself"
+                rows="4" required></textarea>
+            <div class="invalid-feedback">
+                Please tell us something about yourself.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="profile_picture">Profile Picture</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" data-toggle="tooltip" data-placement="top" title="Upload your profile picture">
+                        <i class="fas fa-image"></i>
+                    </span>
+                </div>
+                <input type="file" class="form-control" id="profile_picture" name="profile_picture" required>
+                <div class="invalid-feedback">
+                    Please upload your profile picture.
+                </div>
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary btn-block">Next</button>
         <a href="{% url 'index' %}" class="btn btn-secondary btn-block">Cancel</a>
     </form>
-</body>
-</html>
+</div>
+
+
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Custom JS -->
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        $('form').on('submit', function (event) {
+            var form = this;
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+    });
+</script>
+{% endblock %}

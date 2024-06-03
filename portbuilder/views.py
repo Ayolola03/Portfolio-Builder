@@ -1,9 +1,11 @@
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
-from .models import Bio, ContactInfo, CV, SocialLink, Project, Stack, Services
+from .models import Bio, ContactInfo, CV, SocialLink, Project, Stack, Services, work_exp
 from django.urls import reverse, reverse_lazy
-from .forms import Socials_Create, UpdateForm, StackForm, ServiceForm
+from .forms import Socials_Create, UpdateForm, StackForm, ServiceForm, SocialLinkForm
 from django.contrib.auth import get_user_model
 from django.views.generic.edit import FormView
+from django.http import JsonResponse
+
 
 User = get_user_model()
 
@@ -26,7 +28,7 @@ class Bio_Create(CreateView):
         return super().form_valid(form)
 
 
-class Socials_Create(CreateView):
+class Socials_Create(FormView):
     template_name = "portfolio/socials_create.html"
     form_class = Socials_Create
 
@@ -90,7 +92,7 @@ class ProfileView(DetailView):
 
         context["stacks"] = Stack.objects.filter(user=user)
         context["services"] = Services.objects.filter(user=user)
-
+        context["work_exps"] = work_exp.objects.filter(user=user)
         context["projects"] = Project.objects.filter(user=user)
 
         return context
@@ -110,8 +112,46 @@ class UpdateProfile(UpdateView):
         return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
 
     def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                "first_name": self.object.first_name,
+                "last_name": self.object.last_name,
+                "about_me": self.object.about_me,
+                "profile_picture": (
+                    self.object.profile_picture.url
+                    if self.object.profile_picture
+                    else ""
+                ),
+            }
+            return JsonResponse(data)
+        return response
+
+    def form_invalid(self, form):
+        if self.request.is_ajax():
+            return JsonResponse({"error": form.errors}, status=400)
+        return super().form_invalid(form)
+
+
+class AddSocialLinkView(UpdateView):
+    model = SocialLink
+    form_class = SocialLinkForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        response = super().form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                "platform": form.cleaned_data["platform"],
+                "url": form.cleaned_data["url"],
+            }
+            return JsonResponse(data)
+        return response
+
+    def form_invalid(self, form):
+        if self.request.is_ajax():
+            return JsonResponse({"error": form.errors}, status=400)
+        return super().form_invalid(form)
 
 
 class CvUpload(UpdateView):
@@ -174,8 +214,28 @@ class PortfolioView(DetailView):
         context["bio"] = Bio.objects.get(user=user)
 
         try:
+            context["contact_info"] = ContactInfo.objects.get(user=user)
+        except ContactInfo.DoesNotExist:
+            context["contact_info"] = None
+
+        context["social_links"] = SocialLink.objects.filter(user=user)
+        try:
             context["cv"] = CV.objects.get(user=user)
         except CV.DoesNotExist:
             context["cv"] = None
+
+        context["stacks"] = Stack.objects.filter(user=user)
+        context["services"] = Services.objects.filter(user=user)
+        context["projects"] = Project.objects.filter(user=user)
+        context["work_exps"] = work_exp.objects.filter(user=user)
+
+        # Add the icons list to the context
+        context["icons"] = [
+            "bi-briefcase",
+            "bi-card-checklist",
+            "bi-bar-chart",
+            "bi-binoculars",
+            "bi-calendar-check",
+        ]
 
         return context

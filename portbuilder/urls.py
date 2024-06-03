@@ -1,7 +1,7 @@
 # Portbuilder urls.py
 from django.urls import path, include
 
-from .views import StartPageView, Bio_Create, Socials_Create, ProfileView, UpdateProfile, CvUpload, ProjectUpload, PortfolioView, StackCreateView, ServiceCreateView, ProjectEdit
+from .views import StartPageView, Bio_Create, Socials_Create, ProfileView, UpdateProfile, CvUpload, ProjectUpload, PortfolioView, StackCreateView, ServiceCreateView, ProjectEdit, AddSocialLinkView
 
 urlpatterns = [
     #PortfolioBuilder
@@ -15,6 +15,7 @@ urlpatterns = [
     path("cv/upload/", CvUpload.as_view(), name="cvupload"),
     path("project/upload/", ProjectUpload.as_view(), name="projectupload"),
     path("project/edit/<int:pk>", ProjectEdit.as_view(), name="projectedit"),
+    path('profile/socials/', AddSocialLinkView.as_view(), name='update_socials'),
 
 
     #PortfolioView

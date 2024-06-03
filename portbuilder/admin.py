@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Bio, ContactInfo, SocialLink, CV, Project, Stack, Services
+from .models import Bio, ContactInfo, SocialLink, CV, Project, Stack, Services, work_exp
 
 
 @admin.register(SocialLink)
@@ -16,7 +16,7 @@ class SocialLinkAdmin(admin.ModelAdmin):
 
 @admin.register(Bio)
 class BioAdmin(admin.ModelAdmin):
-    list_display = ("user", "first_name", "last_name", "created_at", "updated_at")
+    list_display = ("user", "first_name", "last_name", "role", "created_at", "updated_at")
     search_fields = ("user__username", "first_name", "last_name")
     list_filter = ("created_at", "updated_at")
     fieldsets = (
@@ -27,6 +27,7 @@ class BioAdmin(admin.ModelAdmin):
                     "user",
                     "first_name",
                     "last_name",
+                    "role",
                     "about_me",
                     "profile_picture",
                 )
@@ -96,3 +97,10 @@ class ServiceAdmin(admin.ModelAdmin):
     search_fields = ("user__username", "name")
     list_filter = ("name",)
     fieldsets = ((None, {"fields": ("user", "name", "description", "price")}),)
+
+@admin.register(work_exp)
+class WorkExpAdmin(admin.ModelAdmin):
+    list_display = ("work_done", "Company", "start_date", "end_date")
+    search_fields = ("work_done", "Company")
+    list_filter = ("work_done", "Company")
+    

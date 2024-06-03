@@ -49,37 +49,9 @@ class Socials_Create(forms.Form):
 
 
 class UpdateForm(forms.ModelForm):
-    platform1 = forms.ChoiceField(choices=SocialLink.PLATFORM_CHOICES, required=False)
-    url1 = forms.URLField(required=False)
-    platform2 = forms.ChoiceField(choices=SocialLink.PLATFORM_CHOICES, required=False)
-    url2 = forms.URLField(required=False)
-    platform3 = forms.ChoiceField(choices=SocialLink.PLATFORM_CHOICES, required=False)
-    url3 = forms.URLField(required=False)
-
     class Meta:
         model = Bio
         fields = ["first_name", "last_name", "about_me", "profile_picture"]
-
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop("user", None)
-        super().__init__(*args, **kwargs)
-        if self.user:
-            social_links = SocialLink.objects.filter(user=self.user)
-            for i, social_link in enumerate(social_links, start=1):
-                self.fields[f"platform{i}"].initial = social_link.platform
-                self.fields[f"url{i}"].initial = social_link.url
-
-    def save(self, commit=True):
-        bio = super().save(commit=False)
-        if commit:
-            bio.save()
-        SocialLink.objects.filter(user=self.user).delete()
-        for i in range(1, 4):
-            platform = self.cleaned_data.get(f"platform{i}")
-            url = self.cleaned_data.get(f"url{i}")
-            if platform and url:
-                SocialLink.objects.create(user=self.user, platform=platform, url=url)
-        return bio
 
 
 class StackForm(forms.Form):
@@ -89,10 +61,7 @@ class StackForm(forms.Form):
         choices=Stack.MASTERY_CHOICES, label="Mastery Level"
     )
     experience_years = forms.IntegerField(label="Years of Experience")
-
     
-    
-
     def save(self, user):
         # Save Stack data
         stack, created = Stack.objects.update_or_create(

@@ -1,8 +1,9 @@
 {% extends 'base_build.html' %}
 {% block content %}
 
-    <h2>Let's get started on that portfolio</h2>
-    <a href="{% url 'create_bio' %}">Click here to get building....</a>
-
+<div class="index-container d-flex justify-content-center align-items-center">
+    <h1 class="index-heading">Let's get started on that portfolio</h1>
+    <a href="{% url 'create_bio' %}" class="index-link">Click here to get building...</a>
+</div>
 
 {% endblock %}
