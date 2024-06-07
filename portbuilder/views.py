@@ -1,7 +1,7 @@
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from .models import Bio, ContactInfo, CV, SocialLink, Project, Stack, Services, work_exp
 from django.urls import reverse, reverse_lazy
-from .forms import Socials_Create, UpdateForm, StackForm, ServiceForm, SocialLinkForm
+from .forms import Socials_Create, UpdateProfileForm, StackForm, ServiceForm, SocialLinkForm
 from django.contrib.auth import get_user_model
 from django.views.generic.edit import FormView
 from django.http import JsonResponse
@@ -100,7 +100,7 @@ class ProfileView(DetailView):
 
 class UpdateProfile(UpdateView):
     model = Bio
-    form_class = UpdateForm
+    form_class = UpdateProfileForm
     template_name = "portfolio/profile_update.html"
 
     def get_form_kwargs(self):
@@ -112,46 +112,26 @@ class UpdateProfile(UpdateView):
         return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                "first_name": self.object.first_name,
-                "last_name": self.object.last_name,
-                "about_me": self.object.about_me,
-                "profile_picture": (
-                    self.object.profile_picture.url
-                    if self.object.profile_picture
-                    else ""
-                ),
-            }
-            return JsonResponse(data)
-        return response
+        form.save()
+        return super().form_valid(form)
 
     def form_invalid(self, form):
-        if self.request.is_ajax():
-            return JsonResponse({"error": form.errors}, status=400)
         return super().form_invalid(form)
 
 
-class AddSocialLinkView(UpdateView):
+class AddSocialLinkView(CreateView):
     model = SocialLink
     form_class = SocialLinkForm
+    template_name = "portfolio/socials_create.html"
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        response = super().form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                "platform": form.cleaned_data["platform"],
-                "url": form.cleaned_data["url"],
-            }
-            return JsonResponse(data)
-        return response
-
-    def form_invalid(self, form):
-        if self.request.is_ajax():
-            return JsonResponse({"error": form.errors}, status=400)
-        return super().form_invalid(form)
+        social_link = form.save(commit=False)
+        social_link.user = self.request.user
+        social_link.save()
+        return super().form_valid(form)
 
 
 class CvUpload(UpdateView):
@@ -174,7 +154,7 @@ class CvUpload(UpdateView):
 class ProjectUpload(CreateView):
     model = Project
     template_name = "portfolio/projectupload.html"
-    fields = ["name", "description", "link"]
+    fields = ["name", "description", "link", "project_picture"]
 
     def get_success_url(self):
         return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
@@ -187,7 +167,7 @@ class ProjectUpload(CreateView):
 class ProjectEdit(UpdateView):
     model = Project
     template_name = "portfolio/projectedit.html"
-    fields = ["name", "description", "link"]
+    fields = ["name", "description", "link", "project_picture"]
 
     def get_object(self, queryset=None):
         # Ensure that we get the project for the current user

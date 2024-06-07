@@ -75,7 +75,7 @@ class ProjectAdmin(admin.ModelAdmin):
     search_fields = ("user__username", "name", "link")
     list_filter = ("created_at", "updated_at")
     fieldsets = (
-        (None, {"fields": ("user", "name", "description", "link")}),
+        (None, {"fields": ("user", "name", "description", "link", "project_picture")}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),
     )
     readonly_fields = ("created_at", "updated_at")

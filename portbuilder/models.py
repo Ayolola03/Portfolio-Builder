@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class Bio(models.Model):
@@ -44,7 +45,7 @@ class SocialLink(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     platform = models.CharField(max_length=20, choices=PLATFORM_CHOICES)
-    url = models.URLField(blank=True, null=True)
+    url = models.CharField(blank=True, help_text="Socials", max_length=400, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -66,7 +67,10 @@ class Project(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, help_text="Description of the project")
-    link = models.URLField(blank=True, help_text="Link to the project")
+    link = models.CharField(blank=True, help_text="Link to the project", max_length=400)
+    project_picture = models.ImageField(
+        upload_to="project_pictures/", blank=True, null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -105,10 +109,10 @@ class work_exp(models.Model):
     Company = models.CharField(max_length=40)
     work_done = models.CharField(max_length=30)
     start_date = models.DateField()
-    end_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True, default=timezone.now)
 
     def __str__(self):
         return f"{self.work_done} at {self.Company}"
-    
+
     class Meta:
         ordering = ['-start_date']

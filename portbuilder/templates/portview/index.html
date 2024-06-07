@@ -12,8 +12,7 @@
             <div class="container">
                 <!--<p class="display-6 color-d">Hello, world!</p>-->
                 <h1 class="hero-title mb-4">My name is {{bio.first_name}} {{bio.last_name}}</h1>
-                <p class="hero-subtitle"><span class="typed"
-                        data-typed-items="I am a {{bio.role}}"></span></p>
+                <p class="hero-subtitle"><span class="typed" data-typed-items="I am a {{bio.role}}"></span></p>
                 <!-- <p class="pt-3"><a class="btn btn-primary btn js-scroll px-4" href="#about" role="button">Learn More</a></p> -->
             </div>
         </div>
@@ -56,16 +55,16 @@
                                 <div class="skill-mf">
                                     <p class="title-s">Skill</p>
                                     {% if stacks %}
-                                        {% for stack in stacks %}
-                                            {% with stack.mastery_level|mastery_to_percentage as percentage %}
+                                    {% for stack in stacks %}
+                                    {% with stack.mastery_level|mastery_to_percentage as percentage %}
                                     <span>{{ stack.name }}</span> <span class="pull-right">{{ percentage }}%</span>
                                     <div class="progress">
                                         <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;"
                                             aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
                                         </div>
                                     </div>
-                                            {% endwith %}
-                                        {% endfor %}
+                                    {% endwith %}
+                                    {% endfor %}
                                     {% else %}
                                     <p>No Stacks yet.</p>
                                     {% endif %}
@@ -82,7 +81,7 @@
                                     <p class="lead">
                                         {{bio.about_me}}
                                     </p>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -109,23 +108,23 @@
                 </div>
             </div>
             <div class="row">
-            {% if services %}
+                {% if services %}
                 {% for service in services %}
-                    <div class="col-md-4">
-                        <div class="service-box">
-                            <div class="service-ico">
-                                <span class="ico-circle"> <i class="bi {{ icons|cycle_icons:forloop.counter0 }}"></i></span>
-                            </div>
-                            <div class="service-content">
-                                <h2 class="s-title">{{ service.name }}</h2>
-                                <p class="s-description text-center">
-                                    {{ service.description }}
-                                </p>
-                            </div>
+                <div class="col-md-4">
+                    <div class="service-box">
+                        <div class="service-ico">
+                            <span class="ico-circle"> <i class="bi {{ icons|cycle_icons:forloop.counter0 }}"></i></span>
+                        </div>
+                        <div class="service-content">
+                            <h2 class="s-title">{{ service.name }}</h2>
+                            <p class="s-description text-center">
+                                {{ service.description }}
+                            </p>
                         </div>
                     </div>
+                </div>
                 {% endfor %}
-            {% else %}
+                {% else %}
                 <div class="col-md-4">
                     <div class="service-box">
                         <div class="service-ico">
@@ -139,7 +138,7 @@
                         </div>
                     </div>
                 </div>
-                {% endif %}     
+                {% endif %}
 
             </div>
         </div>
@@ -212,13 +211,15 @@
                             Portfolio
                         </h3>
                         <p class="subtitle-a">
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                            Here's my working experience so far..
                         </p>
                         <div class="line-mf"></div>
                     </div>
                 </div>
             </div>
             <div class="row">
+                {% if work_exps %}
+                {% for work_exp in work_exps %}
                 <div class="col-md-4">
                     <div class="work-box">
                         <a href="assets/img/work-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
@@ -229,147 +230,23 @@
                         <div class="work-content">
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <h2 class="w-title">Lorem impsum dolor</h2>
+                                    <h2 class="w-title">{{work_exp.Company}}</h2>
                                     <div class="w-more">
-                                        <span class="w-ctegory">Web Design</span> / <span class="w-date">18 Sep.
-                                            2018</span>
+                                        <span class="w-ctegory">{{work_exp.work_done}}</span> / <span
+                                            class="w-date">{{work_exp.start_date}} - {{work_exp.end_date}}</span>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="w-like">
-                                        <a href="portfolio-details.html"> <span class="bi bi-plus-circle"></span></a>
+                                        <a href="#"> <span class="bi bi-person-workspace"></span></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="work-box">
-                        <a href="assets/img/work-2.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                            <div class="work-img">
-                                <img src="assets/img/work-2.jpg" alt="" class="img-fluid">
-                            </div>
-                        </a>
-                        <div class="work-content">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <h2 class="w-title">Loreda Cuno Nere</h2>
-                                    <div class="w-more">
-                                        <span class="w-ctegory">Web Design</span> / <span class="w-date">18 Sep.
-                                            2018</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="w-like">
-                                        <a href="portfolio-details.html"> <span class="bi bi-plus-circle"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="work-box">
-                        <a href="assets/img/work-3.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                            <div class="work-img">
-                                <img src="assets/img/work-3.jpg" alt="" class="img-fluid">
-                            </div>
-                        </a>
-                        <div class="work-content">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <h2 class="w-title">Mavrito Lana Dere</h2>
-                                    <div class="w-more">
-                                        <span class="w-ctegory">Web Design</span> / <span class="w-date">18 Sep.
-                                            2018</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="w-like">
-                                        <a href="portfolio-details.html"> <span class="bi bi-plus-circle"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="work-box">
-                        <a href="assets/img/work-4.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                            <div class="work-img">
-                                <img src="assets/img/work-4.jpg" alt="" class="img-fluid">
-                            </div>
-                        </a>
-                        <div class="work-content">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <h2 class="w-title">Bindo Laro Cado</h2>
-                                    <div class="w-more">
-                                        <span class="w-ctegory">Web Design</span> / <span class="w-date">18 Sep.
-                                            2018</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="w-like">
-                                        <a href="portfolio-details.html"> <span class="bi bi-plus-circle"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="work-box">
-                        <a href="assets/img/work-5.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                            <div class="work-img">
-                                <img src="assets/img/work-5.jpg" alt="" class="img-fluid">
-                            </div>
-                        </a>
-                        <div class="work-content">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <h2 class="w-title">Studio Lena Mado</h2>
-                                    <div class="w-more">
-                                        <span class="w-ctegory">Web Design</span> / <span class="w-date">18 Sep.
-                                            2018</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="w-like">
-                                        <a href="portfolio-details.html"> <span class="bi bi-plus-circle"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="work-box">
-                        <a href="assets/img/work-6.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox">
-                            <div class="work-img">
-                                <img src="assets/img/work-6.jpg" alt="" class="img-fluid">
-                            </div>
-                        </a>
-                        <div class="work-content">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <h2 class="w-title">Studio Big Bang</h2>
-                                    <div class="w-more">
-                                        <span class="w-ctegory">Web Design</span> / <span class="w-date">18 Sep.
-                                            2017</span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="w-like">
-                                        <a href="portfolio-details.html"> <span class="bi bi-plus-circle"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                {% endfor %}
+                {% endif %}
             </div>
         </div>
     </section><!-- End Portfolio Section -->

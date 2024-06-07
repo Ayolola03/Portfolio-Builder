@@ -48,10 +48,21 @@ class Socials_Create(forms.Form):
         return contact_info, SocialLink.objects.filter(user=user)
 
 
-class UpdateForm(forms.ModelForm):
+class UpdateProfileForm(forms.ModelForm):
+
     class Meta:
         model = Bio
-        fields = ["first_name", "last_name", "about_me", "profile_picture"]
+        fields = [
+            "profile_picture",
+            "first_name",
+            "last_name",
+            "about_me",
+            "role",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
 
 
 class StackForm(forms.Form):
