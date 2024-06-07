@@ -1,0 +1,11 @@
+<!-- portfolio/combined_update.html -->
+{% extends 'portfolio/base_create.html' %}
+
+{% block content %}
+<h2>Update The Stack</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save changes</button>
+</form>
+{% endblock %}

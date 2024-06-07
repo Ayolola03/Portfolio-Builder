@@ -1,10 +1,20 @@
+from django.forms import BaseModelForm
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from .models import Bio, ContactInfo, CV, SocialLink, Project, Stack, Services, work_exp
 from django.urls import reverse, reverse_lazy
-from .forms import Socials_Create, UpdateProfileForm, StackForm, ServiceForm, SocialLinkForm
+from .forms import (
+    Socials_Create,
+    UpdateProfileForm,
+    StackForm,
+    ServiceForm,
+    SocialLinkForm,
+    ContactInfoForm,
+    SocialLinkFormSet,
+)
 from django.contrib.auth import get_user_model
 from django.views.generic.edit import FormView
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect
 
 
 User = get_user_model()
@@ -66,6 +76,144 @@ class ServiceCreateView(FormView):
         return super().form_valid(form)
 
 
+class AddSocialLinkView(CreateView):
+    model = SocialLink
+    form_class = SocialLinkForm
+    template_name = "portfolio/socials_create.html"
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        social_link = form.save(commit=False)
+        social_link.user = self.request.user
+        social_link.save()
+        return super().form_valid(form)
+
+class AddWorkExp(CreateView):
+    model = work_exp
+    template_name = "portfolio/workexp.html"
+    fields = ["Company", "work_done", "start_date", "end_date"]
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+class ProjectUpload(CreateView):
+    model = Project
+    template_name = "portfolio/projectupload.html"
+    fields = ["name", "description", "link", "project_picture"]
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class UpdateProfile(UpdateView):
+    model = Bio
+    form_class = UpdateProfileForm
+    template_name = "portfolio/profile_update.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+
+class CvUpload(UpdateView):
+    model = CV
+    template_name = "portfolio/cvupload.html"
+    fields = ["file"]
+
+    def get_object(self, queryset=None):
+        obj, created = CV.objects.get_or_create(user=self.request.user)
+        return obj
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class ProjectEdit(UpdateView):
+    model = Project
+    template_name = "portfolio/projectedit.html"
+    fields = ["name", "description", "link", "project_picture"]
+
+    def get_object(self, queryset=None):
+        # Ensure that we get the project for the current user
+        return Project.objects.get(pk=self.kwargs["pk"], user=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class ServiceUpdate(UpdateView):
+    model = Services
+    template_name = "portfolio/service_edit.html"
+    fields = ["name", "description"]
+
+    def get_object(self, queryset=None):
+        return Services.objects.get(pk=self.kwargs["pk"], user=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+class StackUpdate(UpdateView):
+    model = Stack
+    template_name = "portfolio/stack_edit.html"
+    fields = ["name", "mastery_level", "experience_years"]
+
+    def get_object(self, queryset=None):
+        return Stack.objects.get(pk=self.kwargs["pk"], user=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
+class UpdateWorkExp(UpdateView):
+    model = work_exp
+    template_name = "portfolio/work_exp_edit.html"
+    fields = ["Company", "work_done", "start_date", "end_date"]
+
+    def get_object(self, queryset=None):
+        return work_exp.objects.get(pk=self.kwargs["pk"], user=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
 class ProfileView(DetailView):
     model = User
     template_name = "portfolio/profile.html"
@@ -96,89 +244,6 @@ class ProfileView(DetailView):
         context["projects"] = Project.objects.filter(user=user)
 
         return context
-
-
-class UpdateProfile(UpdateView):
-    model = Bio
-    form_class = UpdateProfileForm
-    template_name = "portfolio/profile_update.html"
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
-
-    def get_success_url(self):
-        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        return super().form_invalid(form)
-
-
-class AddSocialLinkView(CreateView):
-    model = SocialLink
-    form_class = SocialLinkForm
-    template_name = "portfolio/socials_create.html"
-
-    def get_success_url(self):
-        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
-
-    def form_valid(self, form):
-        social_link = form.save(commit=False)
-        social_link.user = self.request.user
-        social_link.save()
-        return super().form_valid(form)
-
-
-class CvUpload(UpdateView):
-    model = CV
-    template_name = "portfolio/cvupload.html"
-    fields = ["file"]
-
-    def get_object(self, queryset=None):
-        obj, created = CV.objects.get_or_create(user=self.request.user)
-        return obj
-
-    def get_success_url(self):
-        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-
-class ProjectUpload(CreateView):
-    model = Project
-    template_name = "portfolio/projectupload.html"
-    fields = ["name", "description", "link", "project_picture"]
-
-    def get_success_url(self):
-        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-
-class ProjectEdit(UpdateView):
-    model = Project
-    template_name = "portfolio/projectedit.html"
-    fields = ["name", "description", "link", "project_picture"]
-
-    def get_object(self, queryset=None):
-        # Ensure that we get the project for the current user
-        return Project.objects.get(pk=self.kwargs["pk"], user=self.request.user)
-
-    def get_success_url(self):
-        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
 
 
 class PortfolioView(DetailView):
@@ -219,3 +284,40 @@ class PortfolioView(DetailView):
         ]
 
         return context
+
+def ContactInfoUpdate(request):
+    user = request.user
+
+    # Get or create the user's contact info
+    contact_info, created = ContactInfo.objects.get_or_create(user=user)
+
+    if request.method == "POST":
+        contact_form = ContactInfoForm(request.POST, instance=contact_info)
+        social_link_formset = SocialLinkFormSet(
+            request.POST, queryset=SocialLink.objects.filter(user=user)
+        )
+
+        if contact_form.is_valid() and social_link_formset.is_valid():
+            contact_form.save()
+            social_links = social_link_formset.save(commit=False)
+            for social_link in social_links:
+                social_link.user = user
+                social_link.save()
+            # Delete any removed social links
+            for social_link in social_link_formset.deleted_objects:
+                social_link.delete()
+            return redirect("profile", pk=user.pk)
+    else:
+        contact_form = ContactInfoForm(instance=contact_info)
+        social_link_formset = SocialLinkFormSet(
+            queryset=SocialLink.objects.filter(user=user)
+        )
+
+    return render(
+        request,
+        "portfolio/contact_info_update.html",
+        {
+            "contact_form": contact_form,
+            "social_link_formset": social_link_formset,
+        },
+    )

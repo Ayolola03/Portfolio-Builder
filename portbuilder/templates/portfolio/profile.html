@@ -3,8 +3,8 @@
 {% block content %}
 <div class="container-fluid">
     <!-- Profile Section -->
-    <div class="row mt-5 row-cols-1 row-cols-md-2 row-cols-lg-3">
-        <div class="col-auto text-center">
+    <div class="row mt-5 row-cols-1 row-cols-md-2">
+        <div class="col text-center">
             {% if bio.profile_picture %}
             <img src="{{ bio.profile_picture.url }}" class="rounded-circle profile-picture" alt="{{ bio.first_name }}">
             {% else %}
@@ -17,15 +17,17 @@
             <a class="btn btn-outline-primary mt-3" href="{% url 'profile_update' bio.pk %}">Edit Profile</a>
         </div>
 
-        <div class="col-md-auto">
+        <div class="col">
             {% if contact_info %}
             <h3>Contact Information</h3>
             <p><i class="fa fa-envelope"></i> {{ contact_info.email }}</p>
             <p><i class="fa fa-phone"></i> {{ contact_info.phone_number }}</p>
             {% endif %}
 
+            <a href="{% url 'update_contact_info' %}" class="btn btn-outline-primary">Edit Contact Info</a>
+
             {% if social_links %}
-            <h3>Social Links</h3>
+            <h3 class="mt-3">Social Links</h3>
             <div class="social-links">
                 {% for link in social_links %}
                 <a href="https://{{ link.url }}" class="btn btn-outline-secondary social-icon" target="_blank">
@@ -133,6 +135,7 @@
                 <li class="list-group-item">
                     <h5>{{ service.name }}</h5>
                     <p>{{ service.description }}</p>
+                    <a href="{% url 'update_services' service.pk %}" class="btn btn-outline-primary mt-2">Edit</a>
                 </li>
                 {% endfor %}
                 <a href="{% url 'services' %}" class="btn btn-outline-primary mt-2">Add Services</a>
@@ -150,6 +153,7 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ stack.name }}
                     <span class="badge bg-primary rounded-pill">{{ stack.mastery_level }}</span>
+                    <span class="badge bg-primary rounded-pill"><a href="{% url 'update_stacks' stack.pk %}" class="btn btn-sm" style="color: antiquewhite;">Edit</a></span>
                 </li>
                 {% endfor %}
                 <a href="{% url 'stacks' %}" class="btn btn-outline-primary mt-2">Add Stacks</a>
@@ -179,7 +183,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="w-like">
-                                <a href="#"> <span class="bi bi-pencil" data-toggle="tooltip" data-placement="top"
+                                <a href="{% url 'update_working_exp' work_exp.pk %}"> <span class="bi bi-pencil" data-toggle="tooltip" data-placement="top"
                                         title="Edit"></span></a>
                             </div>
                         </div>
@@ -200,7 +204,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="w-like">
-                                <a href="#"> <span class="bi bi-plus" data-toggle="tooltip" data-placement="top"
+                                <a href="{% url 'working_exp_create' %}"> <span class="bi bi-plus" data-toggle="tooltip" data-placement="top"
                                         title="Add an experience"></span></a>
                             </div>
                         </div>
@@ -222,7 +226,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="w-like">
-                                <a href="#"> <span class="bi bi-plus" data-toggle="tooltip" data-placement="top"
+                                <a href="{% url 'working_exp_create' %}"> <span class="bi bi-plus" data-toggle="tooltip" data-placement="top"
                                         title="Add an experience"></span></a>
                             </div>
                         </div>

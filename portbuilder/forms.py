@@ -1,5 +1,6 @@
 from django import forms
 from .models import ContactInfo, SocialLink, Bio, CV, Services, Stack
+from django.forms import modelformset_factory
 
 
 class ContactInfoForm(forms.ModelForm):
@@ -105,3 +106,5 @@ class ServiceForm(forms.Form):
         )
 
         return service
+
+SocialLinkFormSet = modelformset_factory(SocialLink, form=SocialLinkForm, extra=1)
