@@ -1,10 +1,10 @@
 {% extends "base_build.html" %}
 {% load static %}
 {% block content %}
-<div class="container-fluid">
-    <!-- Profile Section -->
-    <div class="row mt-5 row-cols-1 row-cols-md-2">
-        <div class="col text-center">
+
+<div class="main_container">
+    <div class="information">
+        <div class="profile elements">
             {% if bio.profile_picture %}
             <img src="{{ bio.profile_picture.url }}" class="rounded-circle profile-picture" alt="{{ bio.first_name }}">
             {% else %}
@@ -16,8 +16,7 @@
             <p class="text-muted">{{ bio.role }}</p>
             <a class="btn btn-outline-primary mt-3" href="{% url 'profile_update' bio.pk %}">Edit Profile</a>
         </div>
-
-        <div class="col">
+        <div class="contact_info elements">
             {% if contact_info %}
             <h3>Contact Information</h3>
             <p><i class="fa fa-envelope"></i> {{ contact_info.email }}</p>
@@ -44,90 +43,104 @@
                     {% endif %}
                 </a>
                 {% endfor %}
-                <a class="btn btn-outline-secondary social-icon" href="{% url 'update_socials'%}"><i class="fa fa-plus"></i></a>
+                <a class="btn btn-outline-secondary social-icon" href="{% url 'update_socials'%}"><i
+                        class="fa fa-plus"></i></a>
             </div>
             {% endif %}
         </div>
-
-
     </div>
-
-    <hr class="my-5">
-
-    <!-- Projects Section -->
-    <div class="row">
-        <div class="col">
-            <h2>Projects</h2>
-            <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-                {% if projects %}
-                {% for project in projects %}
-                <div class="col-md-4">
-                    <div class="card card-blog">
-                        <div class="card-img">
-                            <a href="#"><img
-                                    src="{% if project.project_picture %}{{ project.project_picture.url }}{% else %}{% static 'assets/img/post-1.jpg' %}{% endif %}"
-                                    alt="" class="img-fluid"></a>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-category-box">
-                                <div class="card-category">
-                                    <a href="https://{{project.link}}" target="_blank">
-                                        <h6 class="category">View</h6>
-                                    </a>
-                                </div>
-                                <div class="card-category">
-                                    <a href="{% url 'projectedit' project.pk %}" class="">
-                                        <h6 class="category">Edit</h6>
-                                    </a>
-                                </div>
+    <hr>
+    <div class="projects elements">
+        <h2>Projects</h2>
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            {% if projects %}
+            {% for project in projects %}
+            <div class="col-md-4">
+                <div class="card card-blog">
+                    <div class="card-img">
+                        <a href="#"><img
+                                src="{% if project.project_picture %}{{ project.project_picture.url }}{% else %}{% static 'assets/img/post-1.jpg' %}{% endif %}"
+                                alt="" class="img-fluid"></a>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-category-box">
+                            <div class="card-category">
+                                <a href="https://{{project.link}}" target="_blank">
+                                    <h6 class="category">View</h6>
+                                </a>
                             </div>
-                            <h3 class="card-title">{{project.name}}</h3>
-                            <p class="card-description">
-                                {{project.description}}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-                <div class="col-md-4">
-                    <div class="card card-blog">
-                        <div class="card-img">
-                            <a href="#"><img src="{%static 'assets/img/post-1.jpg'%}" alt="" class="img-fluid"></a>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-category-box">
-                                <div class="card-category">
-                                    <a href="{% url 'projectupload' %}">
-                                        <h6 class="category">Upload</h6>
-                                    </a>
-                                </div>
+                            <div class="card-category">
+                                <a href="{% url 'projectedit' project.pk %}" class="">
+                                    <h6 class="category">Edit</h6>
+                                </a>
                             </div>
-                            <h3 class="card-title">...</h3>
-                            <p class="card-description">
-                                Upload a new project...
-                            </p>
                         </div>
+                        <h3 class="card-title">{{project.name}}</h3>
+                        <p class="card-description">
+                            {{project.description}}
+                        </p>
                     </div>
                 </div>
-                {% else %}
-                <div class="col">
-                    <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">No projects available...</h5>
-                            <a href="{% url 'projectupload' %}" class="btn btn-primary">Upload a Project</a>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
             </div>
+            {% endfor %}
+            <div class="col-md-4">
+                <div class="card card-blog">
+                    <div class="card-img">
+                        <a href="#"><img src="{%static 'assets/img/post-1.jpg'%}" alt="" class="img-fluid"></a>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-category-box">
+                            <div class="card-category">
+                                <a href="{% url 'projectupload' %}">
+                                    <h6 class="category">Upload</h6>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="card-title">...</h3>
+                        <p class="card-description">
+                            Upload a new project...
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">No projects available...</h5>
+                        <a href="{% url 'projectupload' %}" class="btn btn-primary">Upload a Project</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
-
-    <hr class="my-5">
-
-    <!-- Stacks and Services Section -->
-    <div class="row">
-        <div class="col justify-content-center">
+    <hr>
+    <div class="stacks_services">
+        <div class="stacks elements">
+            <h2 class="text-center">Your Stacks</h2>
+            {% if stacks %}
+            <ul class="list-group">
+                {% for stack in stacks %}
+                <li class="list-group-item d-flex">
+                        <div class="col d-flex justify-content-start" style="display: flex; flex-direction: column;">
+                            {{ stack.name }}
+                            <span class="badge bg-primary rounded-pill" style="width: 90px;">{{ stack.mastery_level }}</span>
+                        </div>
+                        <div class="col-4 d-flex justify-content-end" >
+                            <span class="badge me rounded-pill"><a href="{% url 'update_stacks' stack.pk %}"
+                                    class="btn btn-outline-primary">Edit</a></span>
+                        </div>
+                </li>
+                {% endfor %}
+                <a href="{% url 'stacks' %}" class="btn btn-outline-primary mt-2">Add Stacks</a>
+            </ul>
+            {% else %}
+            <p>No Stacks yet.</p>
+            <a href="{% url 'stacks' %}" class="btn btn-outline-primary mt-2">Add Stacks</a>
+            {% endif %}
+        </div>
+        <div class="services elements">
             <h2 class="text-center ">Your Services</h2>
             {% if services %}
             <ul class="list-group">
@@ -145,98 +158,82 @@
             <a href="{% url 'services' %}" class="btn btn-outline-primary mt-2">Add Services</a>
             {% endif %}
         </div>
-        <div class="col">
-            <h2 class="text-center">Your Stacks</h2>
-            {% if stacks %}
-            <ul class="list-group">
-                {% for stack in stacks %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ stack.name }}
-                    <span class="badge bg-primary rounded-pill">{{ stack.mastery_level }}</span>
-                    <span class="badge bg-primary rounded-pill"><a href="{% url 'update_stacks' stack.pk %}" class="btn btn-sm" style="color: antiquewhite;">Edit</a></span>
-                </li>
-                {% endfor %}
-                <a href="{% url 'stacks' %}" class="btn btn-outline-primary mt-2">Add Stacks</a>
-            </ul>
-            {% else %}
-            <p>No Stacks yet.</p>
-            <a href="{% url 'stacks' %}" class="btn btn-outline-primary mt-2">Add Stacks</a>
-            {% endif %}
-        </div>
     </div>
-
-    <!-- Working Experience Section -->
-    <div class="row mt-5">
+    <div class="working_exp">
         <h2 class="text-center ">Your Working Experience</h2>
         {% if work_exps %}
-        {% for work_exp in work_exps %}
-        <div class="col-md-4">
-            <div class="work-box">
-                <div class="work-content card">
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <h2 class="w-title">{{work_exp.Company}}</h2>
-                            <div class="w-more">
-                                <span class="w-ctegory">{{work_exp.work_done}}</span> / <span
-                                    class="w-date">{{work_exp.start_date}} - {{work_exp.end_date}}</span>
+        <div class="exp_content elements row-cols-md-3 row-cols-lg-4 g-4">
+            {% for work_exp in work_exps %}
+            <div class="col-md-4">
+                <div class="work-box">
+                    <div class="work-content card">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h2 class="w-title">{{work_exp.Company}}</h2>
+                                <div class="w-more">
+                                    <span class="w-ctegory">{{work_exp.work_done}}</span> / <span
+                                        class="w-date">{{work_exp.start_date}} - {{work_exp.end_date}}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="w-like">
-                                <a href="{% url 'update_working_exp' work_exp.pk %}"> <span class="bi bi-pencil" data-toggle="tooltip" data-placement="top"
-                                        title="Edit"></span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        <div class="col-md-4">
-            <div class="work-box">
-                <div class="work-content card">
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <h2 class="w-title">....</h2>
-                            <div class="w-more">
-                                Add a new experience....
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="w-like">
-                                <a href="{% url 'working_exp_create' %}"> <span class="bi bi-plus" data-toggle="tooltip" data-placement="top"
-                                        title="Add an experience"></span></a>
+                            <div class="col-sm-4">
+                                <div class="w-like">
+                                    <a href="{% url 'update_working_exp' work_exp.pk %}"> <span class="bi bi-pencil"
+                                            data-toggle="tooltip" data-placement="top" title="Edit"></span></a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        {% else %}
-        <p>No Experiences yet.</p>
-        <div class="col-md-4">
-            <div class="work-box">
-                <div class="work-content card">
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <h2 class="w-title">....</h2>
-                            <div class="w-more">
-                                Add a new experience....
+            {% endfor %}
+            <div class="col-md-4">
+                <div class="work-box">
+                    <div class="work-content card">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h2 class="w-title">....</h2>
+                                <div class="w-more">
+                                    Add a new experience....
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="w-like">
-                                <a href="{% url 'working_exp_create' %}"> <span class="bi bi-plus" data-toggle="tooltip" data-placement="top"
-                                        title="Add an experience"></span></a>
+                            <div class="col-sm-4">
+                                <div class="w-like">
+                                    <a href="{% url 'working_exp_create' %}"> <span class="bi bi-plus"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Add an experience"></span></a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {% else %}
+            <p>No Experiences yet.</p>
+            <div class="col-md-4">
+                <div class="work-box">
+                    <div class="work-content card">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h2 class="w-title">....</h2>
+                                <div class="w-more">
+                                    Add a new experience....
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="w-like">
+                                    <a href="{% url 'working_exp_create' %}"> <span class="bi bi-plus"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Add an experience"></span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
+
     </div>
 </div>
-
 
 {% endblock %}

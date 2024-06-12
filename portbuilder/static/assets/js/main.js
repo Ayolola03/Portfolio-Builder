@@ -1,12 +1,5 @@
-/**
-* Template Name: DevFolio
-* Template URL: https://bootstrapmade.com/devfolio-bootstrap-portfolio-html-template/
-* Updated: Mar 17 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
 
-(function() {
+(function () {
   "use strict";
 
   /**
@@ -113,28 +106,9 @@
   }
 
   /**
-   * Mobile nav toggle
-   */
-  on('click', '.mobile-nav-toggle', function(e) {
-    select('#navbar').classList.toggle('navbar-mobile')
-    this.classList.toggle('bi-list')
-    this.classList.toggle('bi-x')
-  })
-
-  /**
-   * Mobile nav dropdowns activate
-   */
-  on('click', '.navbar .dropdown > a', function(e) {
-    if (select('#navbar').classList.contains('navbar-mobile')) {
-      e.preventDefault()
-      this.nextElementSibling.classList.toggle('dropdown-active')
-    }
-  }, true)
-
-  /**
    * Scrool with ofset on links with a class name .scrollto
    */
-  on('click', '.scrollto', function(e) {
+  on('click', '.scrollto', function (e) {
     if (select(this.hash)) {
       e.preventDefault()
 
@@ -184,24 +158,6 @@
   });
 
   /**
-   * Testimonials slider
-   */
-  new Swiper('.testimonials-slider', {
-    speed: 600,
-    loop: true,
-    autoplay: {
-      delay: 5000,
-      disableOnInteraction: false
-    },
-    slidesPerView: 'auto',
-    pagination: {
-      el: '.swiper-pagination',
-      type: 'bullets',
-      clickable: true
-    }
-  });
-
-  /**
    * Portfolio details slider
    */
   new Swiper('.portfolio-details-slider', {
@@ -233,4 +189,12 @@
    */
   new PureCounter();
 
+  const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+  const navbar = document.querySelector('#navbar');
+
+  mobileNavToggle.addEventListener('click', function () {
+    navbar.classList.toggle('navbar-mobile');
+    mobileNavToggle.classList.toggle('bi-list');
+    mobileNavToggle.classList.toggle('bi-x');
+  });
 })()

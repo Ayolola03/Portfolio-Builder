@@ -9,7 +9,7 @@
     <title>Portfolio</title>
     <link rel="stylesheet" href="{% static 'css/portview/portview.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">  
+    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}">
@@ -18,33 +18,70 @@
 </head>
 
 <body>
-    <header id="header" class="fixed-top">
-        <div class="container d-flex align-items-center justify-content-between">
-    
-            <h1 class="logo"><a href="#">PortBuilder</a></h1>
-            <!-- Uncomment below if you prefer to use an image logo -->
-            <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-    
-            <nav id="navbar" class="navbar">
-                <ul>
-                    <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-                    <li><a class="nav-link scrollto" href="#about">About</a></li>
-                    <li><a class="nav-link scrollto" href="#services">Services</a></li>
-                    <li><a class="nav-link scrollto" href="#projects">Projects</a></li>
-                    <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-                </ul>
-                <i class="bi bi-list mobile-nav-toggle"></i>
-            </nav>
-    
+    {% load static %}
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Portfolio</title>
+        <link rel="stylesheet" href="{% static 'css/portview/portview.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+
+    </head>
+
+    <body>
+        <header id="header" class="fixed-top">
+            <div class="container d-flex align-items-center justify-content-between">
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+                <nav class="navbar navbar-expand-lg">
+                    <h1 class="logo"><a href="#">PortBuilder</a></h1>
+
+                    <div class="collapse navbar-collapse man" id="navbar">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link scrollto active" href="#hero">Home</a></li>
+                            <li class="nav-item"><a class="nav-link scrollto" href="#about">About</a></li>
+                            <li class="nav-item"><a class="nav-link scrollto" href="#services">Services</a></li>
+                            <li class="nav-item"><a class="nav-link scrollto" href="#projects">Projects</a></li>
+                            <li class="nav-item"><a class="nav-link scrollto" href="#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
+                    aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="bi bi-list mobile-nav-toggle"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="container-fluid base-build p-0">
+            {% block content %}
+            {% endblock %}
         </div>
-    </header>
 
-    <div class="container-fluid base-build p-0">
-        {% block content %}
-        {% endblock %}
-    </div>
+        <!-- Vendor JS Files -->
+        <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+        <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+        <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+        <script src="{% static 'assets/vendor/typed.js/typed.umd.js' %}"></script>
+        <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+        <!-- Template Main JS File -->
+        <script src="{% static 'assets/js/main.js' %}"></script>
+    </body>
 
-    
-</body>
+
+    </html>
 
 </html>

@@ -15,7 +15,7 @@ body {
 .navbar {
   position: sticky;
   top: 0;
-  
+
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
@@ -167,6 +167,75 @@ body {
   font-size: 1.2rem;
 }
 
+.main_container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.elements {
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.information {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  margin: 0;
+}
+@media (max-width: 767px) {
+  .information {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stacks_services{
+    display: flex;
+    flex-direction: column
+  }
+
+  .exp_content{
+    display: flex;
+    flex-direction: column;
+  }
+}
+.profile {
+  flex-grow: 1;
+  padding: 20px;
+  text-align: center;
+}
+
+.contact_info {
+  flex-grow: 2;
+  padding: 20px;
+  text-align: center;
+}
+
+.stacks_services {
+  display: flex;
+}
+
+.stacks {
+  flex-grow: 1;
+}
+.services {
+  flex-grow: 2;
+}
+
+.exp_content {
+  display: flex;
+  flex-wrap: wrap;
+  
+}
+
+.work-box {
+  display: flex;
+  padding: 10px;
+  margin-bottom: 0;
+  flex-grow: 1;
+}
 /* This is for the portbuilder index */
 .index-container {
   flex-direction: column;

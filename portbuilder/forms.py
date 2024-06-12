@@ -1,5 +1,5 @@
 from django import forms
-from .models import ContactInfo, SocialLink, Bio, CV, Services, Stack
+from .models import ContactInfo, SocialLink, Bio, Services, Stack, work_exp
 from django.forms import modelformset_factory
 
 
@@ -108,3 +108,12 @@ class ServiceForm(forms.Form):
         return service
 
 SocialLinkFormSet = modelformset_factory(SocialLink, form=SocialLinkForm, extra=1)
+
+class WorkexpForm(forms.ModelForm):
+    class Meta:
+        model = work_exp
+        fields = ["Company", "work_done", "start_date", "end_date"]
+        widgets = {
+            "start_date": forms.DateInput(attrs={'type':'date'}),
+            "end_date": forms.DateInput(attrs={'type':'date'}),
+        }

@@ -10,6 +10,7 @@ from .forms import (
     SocialLinkForm,
     ContactInfoForm,
     SocialLinkFormSet,
+    WorkexpForm,
 )
 from django.contrib.auth import get_user_model
 from django.views.generic.edit import FormView
@@ -92,8 +93,8 @@ class AddSocialLinkView(CreateView):
 
 class AddWorkExp(CreateView):
     model = work_exp
-    template_name = "portfolio/workexp.html"
-    fields = ["Company", "work_done", "start_date", "end_date"]
+    template_name = "portfolio/work_exp.html"
+    form_class = WorkexpForm
 
     def get_success_url(self):
         return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
